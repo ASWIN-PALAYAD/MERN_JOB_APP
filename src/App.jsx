@@ -11,14 +11,29 @@ import Messages from './pages/messages/Messages';
 import Message from './pages/message/Message';
 import MyGigs from './pages/myGigs/MyGigs';
 import './app.scss'
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
+
+
+
 function App() {
+
+  const queryClient = new QueryClient()
 
   const Layout = () => {
     return (
       <div className="app">
+        <QueryClientProvider client={queryClient}>
         <NavBar/>
         <Outlet/>
         <Footer/>
+        </QueryClientProvider>
       </div>
     )
   }
@@ -27,7 +42,9 @@ function App() {
     {path:"/", element : <Layout/>,
       children : [
         {path:'/', element: <Home/>},
-        {path:'/gigs', element:<Gigs/>},
+        {path:'/login', element:<Login/>},
+        {path:'/register', element:<Register/>},
+        {path:'/gigs', element:<Gigs/>}, 
         {path:'/gig/:id',element:<Gig/>},
         {path:'/orders', element:<Orders/>},
         {path:'/mygigs',element:<MyGigs/>},

@@ -25,7 +25,7 @@ const Home = () => {
           <div className="item">
             <h1>A whole world of freelance talent at your fingertips</h1>
             <div className="title">
-              <img src="../../../public/images/check.png" alt="" />
+              <img src="/images/check.png" alt="" />
               The best for every budget
             </div>
             <p>
@@ -33,7 +33,7 @@ const Home = () => {
             </p>
 
             <div className="title">
-              <img src="../../../public/images/check.png" alt="" />
+              <img src="/images/check.png" alt="" />
               The best for every budget
             </div>
             <p>
@@ -41,7 +41,7 @@ const Home = () => {
             </p>
 
             <div className="title">
-              <img src="../../../public/images/check.png" alt="" />
+              <img src="/images/check.png" alt="" />
               The best for every budget
             </div>
             <p>
@@ -49,7 +49,7 @@ const Home = () => {
             </p>
 
             <div className="title">
-              <img src="../../../public/images/check.png" alt="" />
+              <img src="/images/check.png" alt="" />
               The best for every budget
             </div>
             <p>
@@ -57,7 +57,7 @@ const Home = () => {
             </p>
           </div>
           <div className="item">
-            <video src="../../../public/images/video.mp4" controls></video>
+            <video src="/images/video.mp4" controls></video>
           </div>
 
         </div>
@@ -71,15 +71,15 @@ const Home = () => {
             <h1>A business solution designed for teams</h1>
             <p>Upgrade to a curated experience packed with tools and benefits, dedicated to businesses</p>
             <div className="title">
-              <img src="../../../public/images/check.png" alt="" />
+              <img src="/images/check.png" alt="" />
               Connect to freelancers with proven business experience
             </div>
             <div className="title">
-              <img src="../../../public/images/check.png" alt="" />
+              <img src="/images/check.png" alt="" />
               Get matched with the perfect talent by a customer success manager
             </div>
             <div className="title">
-              <img src="../../../public/images/check.png" alt="" />
+              <img src="/images/check.png" alt="" />
               Manage teamwork and boost productivity with one powerful workspace
             </div>
             <button>Explore Fiverr Business</button>

@@ -1,22 +1,41 @@
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../componentsStyles/GigCard.scss';
+import newRequest from '../utils/newRequest';
 
 const GigCard = ({ item }) => {
+
+    const { isLoading, error, data } = useQuery({
+        queryKey: [`${item.UserId}`],
+        queryFn: () =>
+          newRequest.get(`/users/${item.userId}`).then((res)=> {
+            return res.data
+          })
+      });
+
+
+
+
     return (
         <Link to='/gig/123' className='link'>
             <div className="gigCard">
                 {/* <div className="container"> */}
-                <img src={item.img} alt="" />
+                <img src={item.cover} alt="" />
                 <div className="info">
-                    <div className="user">
-                        <img src={item.pp} alt="" />
-                        <span>{item.username}</span>
+                    {isLoading ? "loading..." : error ? 'Somthing went wrong' : (
+                        <div className="user">
+                        <img src={data.img || "/images/noimage.jpg"} alt="" />
+                        <span>{data.username}</span>
                     </div>
-                    <p>{item.dec}</p>
+                    )}
+                    <p>{item.desc}</p>
                     <div className="star">
                         <img src="/images/star.png" alt="" />
-                        <span>{item.star}</span>
+                        <span>
+                            {!isNaN(item.totalStars / item.starNumber) && 
+                            Math.round(item.totalStars / item.starNumber)}
+                        </span>
                     </div>
                 </div>
                 <hr />
