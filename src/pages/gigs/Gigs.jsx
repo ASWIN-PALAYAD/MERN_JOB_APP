@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 
 const Gigs = () => {
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); 
   const [sort, setSort] = useState('sales');
   const minRef = useRef();
   const maxRef = useRef();
