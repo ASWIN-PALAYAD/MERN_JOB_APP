@@ -2,7 +2,7 @@ import { Slider } from 'infinite-react-carousel/lib';
 import React from 'react';
 import "./Gig.scss";
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import newRequest from '../../utils/newRequest';
 import Reviews from '../../componets/Reviews';
 
@@ -152,7 +152,9 @@ const Gig = () => {
               ))}
 
             </div>
+            <Link to={`/pay/${id}`} >
             <button>Continue</button>
+            </Link>
           </div>
         </div>
       )}

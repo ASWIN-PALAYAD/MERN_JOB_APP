@@ -1,22 +1,43 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import "./Messages.scss"
+import "./Messages.scss";
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import newRequest from '../../utils/newRequest.js';
+import moment from 'moment';
 
 const Messages = () => {
 
-  const currentUser = {
-    id : 1,
-    username: 'aswin s',
-    isSeller : true
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const queryClient = useQueryClient();
+
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['conversations'],
+    queryFn: () =>
+      newRequest.get(`/conversations`).then((res)=> {
+        return res.data
+      })
+  });
+
+
+  const mutation = useMutation({
+    mutationFn: (id) => {
+        return newRequest.put(`/conversations/${id}`)
+    },
+    onSuccess: ()=> {
+        queryClient.invalidateQueries(['conversations'])
+    }
+  })
+
+  const handleRead = (id) => {
+    mutation.mutate(id);
   }
-
-  const message = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit maiores repellendus neque molestiae sunt, error corrupti dicta facere, iure, quam amet. Reprehenderit repellendus, sed placeat animi nemo recusandae dolore accusantium.`
-
 
 
   return (
     <div className="messages">
-      <div className="container">
+      {isLoading ? "loading.." : error ? "Somthing went wrong" : (
+        <div className="container">
         <div className="title">
           <h1>Messages</h1>
         </div>
@@ -28,41 +49,28 @@ const Messages = () => {
               <th>Date</th>
               <th>Action</th>
             </tr>
-            <tr className='active'>
-              <td>
-                Aswin s
-              </td>
-              <td> <Link  className='link'  to='/message/123' >{message.substring(0,100)}...</Link> </td>
-              <td>1 day ago</td>
-              <td>
-                <button>Mark as Read</button>
-              </td>
-            </tr>
 
-            <tr className='active'>
+            {data.map(conv => (
+              <tr className={((currentUser.isSeller && !conv.readBySeller) || (!currentUser.isSeller && !conv.readByBuyer)) ? "active" : ''}
+               key={conv.id}>
+              <td>{currentUser.isSeller ? conv.buyerId : conv.sellerId}</td>
+              <td> <Link  className='link' to={`/message/${conv.id}`} >{conv?.lastMessage?.substring(0,100)}..</Link> </td>
+              <td>{moment(conv.updatedAt).fromNow()}</td>
               <td>
-                Aswin s
-              </td>
-              <td><Link className='link' to='/message/123' >{message.substring(0,100)}...</Link></td>
-              <td>1 day ago</td>
-              <td>
-                <button>Mark as Read</button>
+                {(currentUser.isSeller && !conv.readBySeller) || (!currentUser.isSeller && !conv.readByBuyer && (
+                 <button onClick={()=> handleRead(conv.id)} >Mark as Read</button>
+                ))}
               </td>
             </tr>
-
-            <tr>
-              <td>
-                Aswin s
-              </td>
-              <td><Link  className='link'  to='/message/123' >{message.substring(0,100)}...</Link></td>
-              <td>1 day ago</td>
-              
-            </tr>
+            ))}
 
             
+
           </table>
         </div>
       </div>
+      )}
+      
     </div>
   )
 }

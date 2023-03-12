@@ -19,7 +19,7 @@ const Reviews = ({gigId}) => {
 
       const mutation = useMutation({
         mutationFn: (review) => {
-            return newRequest.post('/reviews',review)
+            return newRequest.post('/reviews',review) 
         },
         onSuccess: ()=> {
             queryClient.invalidateQueries(['reviews'])
