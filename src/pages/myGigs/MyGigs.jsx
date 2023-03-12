@@ -1,14 +1,48 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import getCurrentUser from '../../utils/getCurrentUser';
+import newRequest from '../../utils/newRequest';
 import "./MyGigs.scss"
 
 const MyGigs = () => {
+
+  const currentUser = getCurrentUser();
+  const queryClient = useQueryClient();
+
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['myGigs'],
+    queryFn: () =>
+      newRequest.get(`/gigs?userId=${currentUser.id}`).then((res)=> {
+        return res.data
+      })
+  });
+
+  const mutation = useMutation({
+    mutationFn: (id) => {
+        return newRequest.delete(`/gigs/${id}`);
+    },
+    onSuccess: ()=> {
+        queryClient.invalidateQueries(['myGigs'])
+    }
+  })
+
+  const handleDelete = (id) => {
+    mutation.mutate(id)
+  }
+
   return (
     <div className="myGigs">
-      <div className="container">
+      {isLoading ? 'loading...' : error ? 'something went wrong' : (
+        <div className="container">
         <div className="title">
           <h1>Gigs</h1>
-          <Link to='/add'><button>Add New Gig</button></Link>
+          {currentUser.isSeller && (
+            <Link to='/add'>
+              <button>Add New Gig</button>
+            </Link>
+          )}
         </div>
         <div className="table">
           <table>
@@ -19,56 +53,25 @@ const MyGigs = () => {
               <th>Sales</th>
               <th>Action</th>
             </tr>
-            <tr>
+            
+            {data.map(gig => (
+              <tr key={gig._id}>
               <td>
-                <img className='img' src="https://fiverr-res.cloudinary.com/video/upload/so_41.455744,t_gig_cards_web/cjdqfwntsvggngsxhvkd.png" alt="" />
+                <img className='img' src={gig.cover} alt="" />
               </td>
-              <td>Gig 1</td>
-              <td>777</td>
-              <td>67889</td>
+              <td>{gig.title}</td>
+              <td>{gig.price}</td>
+              <td>{gig.sales}</td>
               <td>
-                <img className='delete' src="/images/delete.png" alt="" />
+                <img className='delete' src="/images/delete.png" alt="" onClick={()=>handleDelete(gig._id)} />
               </td>
             </tr>
+            ))}
 
-            <tr>
-              <td>
-                <img className='img' src="https://fiverr-res.cloudinary.com/video/upload/so_41.455744,t_gig_cards_web/cjdqfwntsvggngsxhvkd.png" alt="" />
-              </td>
-              <td>Gig 1</td>
-              <td>777</td>
-              <td>67889</td>
-              <td>
-                <img className='delete' src="/images/delete.png" alt="" />
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <img className='img' src="https://fiverr-res.cloudinary.com/video/upload/so_41.455744,t_gig_cards_web/cjdqfwntsvggngsxhvkd.png" alt="" />
-              </td>
-              <td>Gig 1</td>
-              <td>777</td>
-              <td>67889</td>
-              <td>
-                <img className='delete' src="/images/delete.png" alt="" />
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <img className='img' src="https://fiverr-res.cloudinary.com/video/upload/so_41.455744,t_gig_cards_web/cjdqfwntsvggngsxhvkd.png" alt="" />
-              </td>
-              <td>Gig 1</td>
-              <td>777</td>
-              <td>67889</td>
-              <td>
-                <img className='delete' src="/images/delete.png" alt="" />
-              </td>
-            </tr>
           </table>
         </div>
       </div>
+      )}
     </div>
   )
 }
